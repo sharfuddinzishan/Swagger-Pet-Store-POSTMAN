@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "71249e90-abec-4abc-991a-a7af3c94404d",
+		"name": "Sharfuddin API Swagger Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add New Pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1d1aaf97-0c90-4c9d-9c90-02766302a702",
+						"exec": [
+							"pm.environment.set(\"petID\", pm.variables.replaceIn('{{$randomInt}}'));\r",
+							"pm.environment.set(\"name\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.environment.set(\"photoUrls\", pm.variables.replaceIn('{{$randomAnimalsImage}}'));\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "06d8dd46-2d31-4792-a488-1d03da5c04cd",
+						"exec": [
+							"// console.log(pm.variables.get(\"photoUrls\"));\r",
+							"// var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"let responseInJson = pm.response.json();\r",
+							"// pm.environment.set(\"petID\",responseInJson.id);\r",
+							"\r",
+							"pm.test(\"Status: New Pet Added\", function () \r",
+							"{\r",
+							"    pm.expect(responseInJson.name).to.equal(pm.environment.get(\"name\"));\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{petID}},\r\n  \"name\": \"{{name}}\",\r\n  \"photoUrls\": [\r\n    \"{{photoUrls}}\"\r\n  ],\r\n  \"status\": \"unsold\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basePetUrl}}/pet",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Sharfuddin Ahamed",
+							"disabled": true
+						},
+						{
+							"key": "photoUrls",
+							"value": "[https://ibb.co/2KsjXN4]",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Add Pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09235e4d-4ac3-475a-9727-87ec969a8921",
+						"exec": [
+							"pm.test(\"Verify New Pet Added\", function () \r",
+							"{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"name\"));\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{basePetUrl}}/pet/{{petID}}",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{petID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d116b3ce-c5bd-4e15-b267-3ccbf2f3d520",
+						"exec": [
+							"pm.environment.set(\"name\", pm.variables.replaceIn('{{$randomFirstName}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d87e96e4-a411-4fc7-9e3d-9546f21660ce",
+						"exec": [
+							"pm.test(\"Status: Pet Updated\", function () \r",
+							"{\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{petID}},\r\n  \"name\": \"{{name}}\",\r\n  \"photoUrls\": [\r\n    \"{{photoUrls}}\"\r\n  ],\r\n\r\n  \"status\": \"Sold\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{basePetUrl}}/pet",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Update Pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0e50fb47-2e51-4d3a-9c17-ed378769d454",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f9e791aa-41ed-49aa-a754-3b17fddcdb61",
+						"exec": [
+							"pm.test(\"Verify Pet Updated\", function () \r",
+							"{\r",
+							"    let responseInJson = pm.response.json();\r",
+							"    pm.expect(responseInJson.name).to.eql(pm.environment.get(\"name\"));\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{basePetUrl}}/pet/{{petID}}",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{petID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Pet",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d90c8d29-3de0-43cf-be5e-94778e664e67",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4d58db60-2112-41d1-a629-28b8d981a41d",
+						"exec": [
+							"let responseInJson = pm.response.json();\r",
+							"pm.test(\"Status: Pet Removed\", function () \r",
+							"{\r",
+							"    pm.expect(responseInJson.message).to.equal(pm.environment.get(\"petID\"));\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{basePetUrl}}/pet/{{petID}}",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{petID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Delete Pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1827a25-3e17-4c06-a6fe-132aa3b529d4",
+						"exec": [
+							"pm.test(\"Verify Pet Deleted Succssfully\", function () \r",
+							"{\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{basePetUrl}}/pet/{{petID}}",
+					"host": [
+						"{{basePetUrl}}"
+					],
+					"path": [
+						"pet",
+						"{{petID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "aeb4fc50-a3cc-42ef-a39c-b39c3913e20f",
+						"exec": [
+							"pm.environment.set(\"userId\", pm.variables.replaceIn('{{$randomInt}}'));\r",
+							"pm.environment.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'));\r",
+							"pm.environment.set(\"userFirstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.environment.set(\"userLastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.environment.set(\"userEmail\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							"pm.environment.set(\"userPassword\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.environment.set(\"userPhone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "98b031cf-0f18-4036-bb13-7bb1541e1fd3",
+						"exec": [
+							"let responseInJson = pm.response.json();\r",
+							"pm.test(\"Status: New User Created\", function () \r",
+							"{\r",
+							"    pm.expect(responseInJson.message).to.equal(pm.environment.get(\"userId\"));\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{userId}}\",\r\n  \"username\": \"{{userName}}\",\r\n  \"firstName\": \"{{userFirstName}}\",\r\n  \"lastName\": \"{{userLastName}}\",\r\n  \"email\": \"{{userEmail}}\",\r\n  \"password\": \"{{userPassword}}\",\r\n  \"phone\": \"{{userPhone}}\",\r\n  \"userStatus\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db8d99e9-f0b0-47b5-a8dd-e5498f5e1e1a",
+						"exec": [
+							"pm.test(\"Verify New User Added and Retrived\", function () \r",
+							"{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.firstName).to.eql(pm.environment.get(\"userFirstName\"));\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user/{{userName}}",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f12e1153-075c-4bec-b324-4035b97d5fea",
+						"exec": [
+							"\r",
+							"pm.test(\"Verify User Updated\", function () \r",
+							"{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(pm.environment.get(\"userId\"));\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{userId}},\r\n  \"username\": \"{{userName}}\",\r\n  \"firstName\": \"Sharfuddin\",\r\n  \"lastName\": \"Ahamed\",\r\n  \"email\": \"{{userEmail}}\",\r\n  \"password\": \"12345\",\r\n  \"phone\": \"01671391000\",\r\n  \"userStatus\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user/{{userName}}",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a3482b9-259c-435b-984a-0edb2156ac75",
+						"exec": [
+							"pm.test(\"Verify User Deletion\", function () \r",
+							"{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(pm.environment.get(\"userName\"));\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user/{{userName}}",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7c656801-3d40-42af-8265-1175aecd3ff8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "1bcbfa70-1138-491f-a830-bca010a2eb86",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
